@@ -6,14 +6,14 @@ int minNonce = 0;
 uint16_t counter = 0;
 uint16_t noncePool[10];
 int nonceIndex = 0;
-unsigned long seed = analogRead(A0) ^ micros() ^ analogRead(A1);  // Initial seed value for random numbers;
+unsigned long seed = analogRead(A0) ^ analogRead(A1);  // Initial seed value for random numbers;
 
 void buildPacket(Packet* pkt, MessageType type) {
   // Actual Command being sent
   unsigned char command;
   switch (type) {
     case ESTOP: command = 'S'; break;
-    case CHECK: command = 'C'; break;  // ... more cases
+    case CHECK: command = 'C'; break;
     default: command = 'S'; break;
   }
   pkt->command = (uint8_t)command;

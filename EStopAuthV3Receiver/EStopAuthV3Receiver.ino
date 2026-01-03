@@ -7,6 +7,7 @@
 #include "Packet.h"
 #include <RH_ASK.h>
 #include <SPI.h>
+
 Packet packet;               // Create a packet
 Packet* incoming = &packet;  // Create a pointer to it
 
