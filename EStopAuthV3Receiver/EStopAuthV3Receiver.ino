@@ -81,9 +81,7 @@ void loop() {
           // SUCCESS: The key is correct and the data hasn't been tampered with
           lastValidSeq = incoming->seqNum;
 
-          digitalWrite(8, HIGH);
-          delay(750);
-          digitalWrite(8, LOW);
+          Serial.println("PACKET VALID!");
         } else {
           Serial.println("SECURITY ALERT: Invalid Hash Received!");
         }
@@ -109,7 +107,7 @@ int checkNonce(uint16_t seq, uint32_t nonce) {
     usedMask = 0;
     prevMinNonce = currentMinNonce;
   }
-  // Safety: If for some  godforsaken reason we get an old block, reject it
+  // Safety: If for some godforsaken reason we get an old block, reject it
   else if (currentMinNonce < prevMinNonce) {
     return 0;
   }
@@ -128,7 +126,7 @@ int checkNonce(uint16_t seq, uint32_t nonce) {
     usedMask |= (1 << index);
     return 1;
   } else {
-    // Bit was already 1, this is a replay!
+    // Bit was already 1, this is a replay
     return 0;
   }
 }

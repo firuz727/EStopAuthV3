@@ -16,6 +16,7 @@ RH_ASK radioDriver;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
+  pinMode(8, INPUT);
   pinMode(7, INPUT);
   pinMode(6, INPUT);
   while (!Serial) {
@@ -28,7 +29,9 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   enum MessageType command;
-  if (digitalRead(7) == HIGH) {
+
+  // Regular Packet
+  if (digitalRead(8) == HIGH) {
     command = ESTOP;
     buildPacket(pkt, command);
 
@@ -44,7 +47,59 @@ void loop() {
     }
     Serial.println();
 
-    radioDriver.send((uint8_t*)pkt, sizeof(pkt));
+    radioDriver.send((uint8_t*)pkt, sizeof(Packet));
+    radioDriver.waitPacketSent();
+
+    clearPacket(pkt);
+    delay(1000);
+  }
+
+  // Incorrect Nonce
+  if (digitalRead(7) == HIGH) {
+    command = ESTOP;
+    buildPacket(pkt, command);
+
+    pkt->nonce = 4;
+
+    Serial.print(pkt->command);
+    Serial.print(", ");
+    Serial.print(pkt->seqNum);
+    Serial.print(", ");
+    Serial.print(pkt->nonce);
+    Serial.print(", ");
+    for (int i = 0; i < 32; i++) {
+      Serial.print(pkt->hash[i]);
+      Serial.print(".");
+    }
+    Serial.println();
+
+    radioDriver.send((uint8_t*)pkt, sizeof(Packet));
+    radioDriver.waitPacketSent();
+
+    clearPacket(pkt);
+    delay(1000);
+  }
+
+  // Tampered Hash
+  if (digitalRead(6) == HIGH) {
+    command = ESTOP;
+    buildPacket(pkt, command);
+
+    pkt->hash[4] = 20;
+
+    Serial.print(pkt->command);
+    Serial.print(", ");
+    Serial.print(pkt->seqNum);
+    Serial.print(", ");
+    Serial.print(pkt->nonce);
+    Serial.print(", ");
+    for (int i = 0; i < 32; i++) {
+      Serial.print(pkt->hash[i]);
+      Serial.print(".");
+    }
+    Serial.println();
+
+    radioDriver.send((uint8_t*)pkt, sizeof(Packet));
     radioDriver.waitPacketSent();
 
     clearPacket(pkt);
