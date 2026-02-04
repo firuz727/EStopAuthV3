@@ -10,7 +10,7 @@ EStopAuthV3 is the third iteration of a lightweight hashing authentication proto
 
 ## Hardware Requirements
 
-- Arduino boards (Uno)
+- Arduino or ESP32 boards (Uno)
 - Buttons, 220Ω resistors, jumper wires.
 
 ## Software Requirements
@@ -23,7 +23,7 @@ EStopAuthV3 is the third iteration of a lightweight hashing authentication proto
 
 1. Clone this repository.
 2. Build the required circuitry.
-3. Open the appropriate .ino file in Arduino IDE.
+3. Open the appropriate code file in Arduino IDE.
 4. Install any required libraries via Library Manager.
 5. Upload the sketch to your Arduino board.
 
